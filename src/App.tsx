@@ -2,11 +2,11 @@ import * as React from 'react';
 import './App.css';
 
 import logo from './logo.svg';
-import {AzureAD, LoginType, IToken, LoginFunction} from './AzureAD';
+import {AzureAD, LoginType, IUserInfo, LoginFunction} from './AzureAD';
 
 class App extends React.Component {
 
-  setToken = (token: IToken) => {};
+  setToken = (token: IUserInfo) => {};
 
   foo = (login: LoginFunction) => {
     login();
