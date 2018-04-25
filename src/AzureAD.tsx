@@ -13,14 +13,16 @@ interface IProps {
 }
 
 interface IState {
-    authenticated: boolean;
-    token: string;
+    authenticated: boolean,
+    idToken: string,
+    accessToken: string,
 }
 
 class AzureAD extends React.Component<IProps, IState> {
     state: IState = {
         authenticated: false,
-        token: ""
+        idToken: "",
+        accessToken: "",
     };
 
     login = () => {
