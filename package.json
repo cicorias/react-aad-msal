@@ -2,12 +2,16 @@
   "name": "react-aad-msal",
   "version": "0.1.0",
   "description": "A react component that integrates with Azure AD (v2, MSAL).",
-  "private": true,
+  "private": false,
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://reactaad.visualstudio.com/_git/react-aad-msal"
   },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "author": "Laura Bochenek",
   "contributors": [
     "Laura Bochenek <laura.bochenek@microsoft.com>",
@@ -41,6 +45,7 @@
     "postcss-loader": "2.0.8",
     "promise": "8.0.1",
     "raf": "3.4.0",
+    "rimraf": "^2.6.2",
     "react": "16.3.2",
     "react-dev-utils": "^5.0.1",
     "react-dom": "16.3.2",
@@ -62,9 +67,15 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
+    "rimraf": "./node_modules/.bin/rimraf",
+    "tslint": "./node_modules/.bin/tslint",
+    "clean": "npm cache clean --force && npm run rimraf -- node_modules dist",
+    "clean:build": "npm run rimraf -- dist",
+    "lint": "npm run tslint -- -c tslint.json './src/**/*.tsx'",
     "start": "node scripts/start.js",
-    "build": "tsc",
-    "test": "node scripts/test.js --env=jsdom"
+    "build": "npm run lint && tsc",
+    "test": "node scripts/test.js --env=jsdom",
+    "prepublish": "npm run clean && npm install && npm run build"
   },
   "devDependencies": {
     "@types/jest": "^22.2.3",
