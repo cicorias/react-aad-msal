@@ -2,19 +2,32 @@ import * as React from 'react';
 import './App.css';
 
 import logo from './logo.svg';
+import {AzureAD, LoginType, IToken, LoginFunction} from './AzureAD';
 
 class App extends React.Component {
+
+  setToken = (token: IToken) => {};
+
+  foo = (login: LoginFunction) => {
+    login();
+    return (<div />);
+  };
+
   public render() {
+    // var unauth = (
+    //   <div>
+    //     <button onClick={} >Click me to log in!</button>
+    //   </div>);
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </div>
+      <AzureAD
+        clientID=""
+        graphScopes={[""]}
+        authority=""
+        unauthenticatedFunction={this.foo}
+        userInfoCallback={this.setToken}
+        type={LoginType.Popup}>
+        <div>Authed</div>
+      </AzureAD>
     );
   }
 }
