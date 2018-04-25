@@ -1,11 +1,12 @@
 import * as React from 'react';
+import * as Msal from 'msal';
 
 enum LoginType {
     Popup,
     Redirect,
 }
 
-type TokenCallback = (token: IToken) => void;
+type UserInfoCallback = (token: IUserInfo) => void;
 
 type UnauthenticatedFunction = (login: LoginFunction) => JSX.Element;
 
@@ -17,26 +18,23 @@ interface IProps {
     authority?: string,
     type?: LoginType,
     unauthenticatedFunction: UnauthenticatedFunction,
-    tokenCallback: TokenCallback,
+    userInfoCallback: UserInfoCallback,
 }
 
 interface IState {
     authenticated: boolean,
-    token: IToken,
+    token: IUserInfo | null,
 }
 
-interface IToken {
-    idToken: string,
+interface IUserInfo {
     accessToken: string,
+    user: Msal.User,
 }
 
 class AzureAD extends React.Component<IProps, IState> {
     state: IState = {
         authenticated: false,
-        token: {
-            idToken: "",
-            accessToken: "",
-        },
+        token: null,
     };
 
     private login = () => {
@@ -55,5 +53,5 @@ class AzureAD extends React.Component<IProps, IState> {
     }
 }
 
-export {AzureAD, LoginType, IToken, UnauthenticatedFunction, LoginFunction};
+export {AzureAD, LoginType, IUserInfo, UnauthenticatedFunction, LoginFunction};
 export default AzureAD;
