@@ -1,10 +1,15 @@
 import * as React from 'react';
 
+enum LoginType {
+    Popup,
+    Redirect,
+}
 interface IProps {
     clientID : string,
     graphScopes: string[], 
     authority?: string,
-    unAuthenticatedComponent: JSX.Element
+    type?: LoginType,
+    unAuthenticatedComponent: JSX.Element,
 }
 
 interface IState {
@@ -30,4 +35,5 @@ class AzureAD extends React.Component<IProps, IState> {
     }
 }
 
+export {AzureAD, LoginType};
 export default AzureAD;
