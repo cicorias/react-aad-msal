@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as Msal from 'msal';
+import { userInfo } from 'os';
 
 enum LoginType {
     Popup,
@@ -23,18 +24,19 @@ interface IProps {
 
 interface IState {
     authenticated: boolean,
-    token: IUserInfo | null,
+    userInfo: IUserInfo | null,
 }
 
 interface IUserInfo {
-    accessToken: string,
+    jwtAccessToken: string,
+    jwtIdToken: string,
     user: Msal.User,
 }
 
 class AzureAD extends React.Component<IProps, IState> {
     state: IState = {
         authenticated: false,
-        token: null,
+        userInfo: null,
     };
 
     private login = () => {
