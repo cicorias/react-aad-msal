@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as Msal from 'msal';
-import { userInfo } from 'os';
 
 enum LoginType {
     Popup,
