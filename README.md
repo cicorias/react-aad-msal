@@ -39,7 +39,7 @@ printUserInfo = (userInfo) => {console.log(userInfo)};
 //...
 ```
 
-Once you've set this up, you should be able to set up a button to login that will hit an AAD instance.  To set up your instance, check out the documentation on [Azure Active Directory](https://docs.microsoft.com/en-us/azure/active-directory/get-started-azure-ad) and on how to connect an [Identity Provider](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-msa-app) for that AAD instance.
+Once you've set this up, you should be able to set up a button to login that will hit an AAD instance.  To set up your instance, check out the documentation on [Azure Active Directory](https://docs.microsoft.com/en-us/azure/active-directory-b2c/) and on how to connect an [Identity Provider](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-msa-app) for that AAD instance.
 ### Samples
 
 If you want to run examples of this library out of the box, feel free to go to [the samples repo](https://reactaad.visualstudio.com/react-aad-msal/).  There you'll find a couple implementations that leverage the library, as well as a tutorial of how to set up Azure Active Directory with an Identity Provider.
@@ -50,7 +50,7 @@ The Azure AD component optionally accepts a ```reduxStore``` prop. On successful
 
 Import your store into the file rendering the AzureAD component and pass it in:
 
-```
+```javascript
 <AzureAD
   reduxStore={store}
   clientID={'<Application ID for your application>'}
@@ -64,7 +64,7 @@ Import your store into the file rendering the AzureAD component and pass it in:
 
 Add a case to handle ```AAD_LOGIN_SUCCESS``` actions in a reducer file:
 
-```
+```javascript
 const initialState = {
   aadResponse: null,
 };
