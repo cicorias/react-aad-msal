@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # up the patch on this build...
-if [[ -z $BUILD_SOURCEVERSIONAUTHOR != "Mr Robot" ]]; then
+if [[ -z "$BUILD_SOURCEVERSIONAUTHOR" != "Mr Robot" ]]; then
     git config --global user.email "mrrobot@nowhere.com"
     git config --global user.name "Mr Robot"
     git checkout master -f
