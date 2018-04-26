@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# up the patch on this build....
+# up the patch on this build...
 if [ -n "$BUILD_SOURCEVERSIONAUTHOR" ]; then
     if [ "$BUILD_SOURCEVERSIONAUTHOR" = "Mr Robot" ]; then
         git config --global user.email "mrrobot@nowhere.com"
