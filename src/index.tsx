@@ -1,6 +1,7 @@
 import * as Msal from 'msal';
 import * as React from 'react';
-
+import { Store } from 'redux';
+import { AAD_LOGIN_SUCCESS, loginSuccessful } from './actions';
 
 enum LoginType {
   Popup,
@@ -20,6 +21,7 @@ interface IProps {
   type?: LoginType,
   unauthenticatedFunction: UnauthenticatedFunction,
   userInfoCallback: UserInfoCallback,
+  reduxStore?: Store
 }
 
 interface IState {
@@ -44,7 +46,13 @@ class AzureAD extends React.Component<IProps, IState> {
   };
 
   logout = () => {
-    ;
+    // Log out of MSAL
+  };
+
+  dispatchToProvidedReduxStore(data: IUserInfo) {
+    if (this.props.reduxStore) {
+      this.props.reduxStore.dispatch(loginSuccessful(data))
+    }
   }
 
   render() {
@@ -55,5 +63,5 @@ class AzureAD extends React.Component<IProps, IState> {
   }
 }
 
-export { AzureAD, LoginType, IUserInfo, UnauthenticatedFunction, LoginFunction };
+export { AzureAD, LoginType, IUserInfo, UnauthenticatedFunction, LoginFunction, AAD_LOGIN_SUCCESS };
 export default AzureAD;
