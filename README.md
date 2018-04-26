@@ -43,3 +43,38 @@ Once you've set this up, you should be able to set up a button to login that wil
 ### Samples
 
 If you want to run examples of this library out of the box, feel free to go to [the samples repo](https://reactaad.visualstudio.com/react-aad-msal/).  There you'll find a couple implementations that leverage the library, as well as a tutorial of how to set up Azure Active Directory with an Identity Provider.
+
+### Integrating with a Redux Store
+
+The Azure AD component optionally accepts a ```reduxStore``` prop. On successful login, Azure AD will dispatch an action of type ```AAD_LOGIN_SUCCESS``` to the provided store, containing the token and user information returned from Active Directory.
+
+Import your store into the file rendering the AzureAD component and pass it in:
+
+```
+<AzureAD
+  reduxStore={store}
+  clientID={'<Application ID for your application>'}
+  graphScopes={['https://<your-tenant-name>.onmicrosoft.com/hello/demo.read']}
+  unauthenticatedFunction={this.loginCallback}
+  userInfoCallback={this.printUserInfo}
+  authority={'https://login.microsoftonline.com/tfp/<your-tenant-name>.onmicrosoft.com/<your-sign-in-sign-up-policy>'}
+  type={LoginType.Popup}
+/>
+```
+
+Add a case to handle ```AAD_LOGIN_SUCCESS``` actions in a reducer file:
+
+```
+const initialState = {
+  aadResponse: null,
+};
+
+const sampleReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'AAD_LOGIN_SUCCESS':
+      return { ...state, aadResponse: action.payload };
+    default:
+      return state; 
+  }
+};
+```
