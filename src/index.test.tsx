@@ -4,7 +4,7 @@ import * as Msal from 'msal';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-require('jest-localstorage-mock');
+require('jest-localstorage-mock'); // tslint:disable-line
 
 import { AzureAD, LoginType } from './index';
 
@@ -14,7 +14,7 @@ beforeEach(() => {
   // values stored in tests will also be available in other tests unless you run
   localStorage.clear();
 });
- 
+
 it('renders without crashing', () => {
   const div = document.createElement('div');
   //   ReactDOM.render(<AzureAD />, div);

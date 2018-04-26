@@ -2,6 +2,7 @@ import * as Msal from 'msal';
 import * as React from 'react';
 import { Store } from 'redux';
 import { AAD_LOGIN_SUCCESS, loginSuccessful } from './actions';
+import { Logger } from './logger';
 
 enum LoginType {
   Popup,
@@ -35,11 +36,9 @@ interface IUserInfo {
   user: Msal.User,
 }
 
-// TODO: implement logger method that is not console.log
-
 class AzureAD extends React.Component<IProps, IState> {
 
-  clientApplication: Msal.UserAgentApplication;
+  private clientApplication: Msal.UserAgentApplication;
 
   constructor(props: IProps) {
     super(props);
@@ -54,51 +53,14 @@ class AzureAD extends React.Component<IProps, IState> {
     };
   }
 
-  loginRedirect = (errorDesc: string, idToken: string, error: string, tokenType: string) => {
-    if (idToken) {
-      this.acquireTokens(idToken);
+  public render() {
+    if (!this.state.authenticated) {
+      return this.props.unauthenticatedFunction(this.login);
     }
-    else if (errorDesc || error) {
-      console.log(error + ':' + errorDesc);
-    }
+    return this.props.children;
   }
 
-  acquireTokens = (idToken: string) => {
-    this.clientApplication.acquireTokenSilent(this.props.graphScopes)
-
-      .then((accessToken: string) => {
-        this.createUserInfo(accessToken, idToken, this.clientApplication.getUser());
-      }, (tokenSilentError) => {
-        console.log(tokenSilentError);
-        this.clientApplication.acquireTokenPopup(this.props.graphScopes)
-          .then((accessToken: string) => {
-            this.createUserInfo(accessToken, idToken, this.clientApplication.getUser());
-          }, (tokenPopupError) => {
-            console.log(tokenPopupError);
-          });
-      });
-  }
-
-  login = () => {
-    if (this.props.type === LoginType.Popup) {
-      this.clientApplication.loginPopup(this.props.graphScopes)
-        .then((idToken: string) => {
-          this.acquireTokens(idToken);
-        }, (error) => {
-          console.log(error);
-        });
-    } else {
-      this.clientApplication.loginRedirect(this.props.graphScopes);
-    }
-  };
-
-  dispatchToProvidedReduxStore(data: IUserInfo) {
-    if (this.props.reduxStore) {
-      this.props.reduxStore.dispatch(loginSuccessful(data))
-    }
-  }
-
-  createUserInfo = (accessToken: string, idToken: string, msalUser: Msal.User) => {
+  public createUserInfo = (accessToken: string, idToken: string, msalUser: Msal.User) => {
     const user: IUserInfo = {
       jwtAccessToken: accessToken,
       jwtIdToken: idToken,
@@ -112,16 +74,53 @@ class AzureAD extends React.Component<IProps, IState> {
     this.dispatchToProvidedReduxStore(user);
   }
 
-  logout = () => {
-    this.clientApplication.logout();
+  private loginRedirect = (errorDesc: string, idToken: string, error: string, tokenType: string) => {
+    if (idToken) {
+      this.acquireTokens(idToken);
+    }
+    else if (errorDesc || error) {
+      Logger.error(`Error doing login redirect; errorDescription=${errorDesc}, error=${error}`);
+    }
+  }
+
+  private acquireTokens = (idToken: string) => {
+    this.clientApplication.acquireTokenSilent(this.props.graphScopes)
+      .then((accessToken: string) => {
+        this.createUserInfo(accessToken, idToken, this.clientApplication.getUser());
+      }, (tokenSilentError) => {
+        Logger.error(`token silent error; ${tokenSilentError}`);
+        this.clientApplication.acquireTokenPopup(this.props.graphScopes)
+          .then((accessToken: string) => {
+            this.createUserInfo(accessToken, idToken, this.clientApplication.getUser());
+          }, (tokenPopupError) => {
+            Logger.error(`token popup error; ${tokenPopupError}`);
+          });
+      });
+  }
+
+  private login = () => {
+    if (this.props.type === LoginType.Popup) {
+      this.clientApplication.loginPopup(this.props.graphScopes)
+        .then((idToken: string) => {
+          this.acquireTokens(idToken);
+        }, (error) => {
+          Logger.error(`Login popup failed; ${error}`);
+        });
+    } else {
+      this.clientApplication.loginRedirect(this.props.graphScopes);
+    }
   };
 
-  render() {
-    if (!this.state.authenticated) {
-      return this.props.unauthenticatedFunction(this.login);
+  private dispatchToProvidedReduxStore(data: IUserInfo) {
+    if (this.props.reduxStore) {
+      this.props.reduxStore.dispatch(loginSuccessful(data))
     }
-    return this.props.children;
   }
+
+  // TODO: implement logout. commented out for tslint.
+  /*private logout = () => {
+    this.clientApplication.logout();
+  };*/
 }
 
 export { AzureAD, LoginType, IUserInfo, UnauthenticatedFunction, LoginFunction, AAD_LOGIN_SUCCESS };
